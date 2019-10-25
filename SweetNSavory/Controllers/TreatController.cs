@@ -53,7 +53,15 @@ namespace SweetNSavory.Controllers {
     public async Task<ActionResult> Details (int id) {
       var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync (userId);
-      var model = _db.Treats.FirstOrDefault (t => t.TreatId == id);
+      var treat = _db.Treats.FirstOrDefault (t => t.TreatId == id);
+      List<int> flavorIds = _db.TreatFlavors
+                      .Where(tf => tf.TreatId == treat.TreatId)
+                      .Select(rf => rf.FlavorId)
+                      .ToList();
+      var flavors = _db.Flavors
+                    .Where(f => flavorIds.Contains(f.FlavorId))
+                    .ToList();
+      var model = new TreatViewModel(){Treat = treat,Flavors = flavors};
       return View (model);
     }
 
