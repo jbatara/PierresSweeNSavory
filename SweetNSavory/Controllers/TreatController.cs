@@ -48,7 +48,14 @@ namespace SweetNSavory.Controllers {
       return RedirectToAction ("Index", "Treat");
     }
 
-    
+    [HttpGet]
+    public async Task<ActionResult> Details (int id) {
+      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync (userId);
+      var model = _db.Treats.FirstOrDefault(t => t.TreatId == id);
+      return View (model);
+    }
+
 
     public IActionResult Privacy () {
       return View ();
