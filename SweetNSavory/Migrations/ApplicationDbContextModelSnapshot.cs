@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SweetNSavory.Data;
 
-namespace SweetNSavory.Data.Migrations
+namespace SweetNSavory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191025163531_InitialandIdentity")]
-    partial class InitialandIdentity
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +221,12 @@ namespace SweetNSavory.Data.Migrations
                     b.Property<string>("FlavorName")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("FlavorId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Flavors");
                 });
@@ -237,7 +240,12 @@ namespace SweetNSavory.Data.Migrations
                     b.Property<string>("TreatName")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("TreatId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Treats");
                 });
@@ -312,6 +320,20 @@ namespace SweetNSavory.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SweetNSavory.Models.Flavor", b =>
+                {
+                    b.HasOne("SweetNSavory.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("SweetNSavory.Models.Treat", b =>
+                {
+                    b.HasOne("SweetNSavory.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("SweetNSavory.Models.TreatFlavor", b =>

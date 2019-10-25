@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SweetNSavory.Data;
 
-namespace SweetNSavory.Data.Migrations
+namespace SweetNSavory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191025181637_IdentityUserToFlavor")]
-    partial class IdentityUserToFlavor
+    [Migration("20191025183348_InitialwithIdentity")]
+    partial class InitialwithIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
