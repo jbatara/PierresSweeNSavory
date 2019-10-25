@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-namespace SS.Models
+namespace SweetNSavory.Models
 {
   public class Treat
   {
     public Treat()
     {
-      this.Flavors = new HashSet<TreatFlavor>();
+      this.TreatFlavors = new HashSet<TreatFlavor>();
     }
     public int TreatId { get; set; }
     public string TreatName { get; set; }
-    public ICollection<TreatFlavor> Flavors { get; set; }
+    public ICollection<TreatFlavor> TreatFlavors { get; set; }
   }
 }
