@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SweetNSavory.Data;
 using SweetNSavory.Models;
@@ -52,10 +53,31 @@ namespace SweetNSavory.Controllers {
     public async Task<ActionResult> Details (int id) {
       var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync (userId);
-      var model = _db.Treats.FirstOrDefault(t => t.TreatId == id);
+      var model = _db.Treats.FirstOrDefault (t => t.TreatId == id);
       return View (model);
     }
 
+    [HttpGet]
+    public async Task<ActionResult> Edit (int id) {
+      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync (userId);
+      var model = _db.Treats.FirstOrDefault (t => (t.TreatId == id) & (t.User.Id == currentUser.Id));
+      ViewBag.Flavors = _db.Flavors.ToList ();
+      ViewBag.TreatId = id;
+      return View (model);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Edit (Treat t, int flavId) {
+      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync (userId);
+      if (flavId != 0) {
+        _db.TreatFlavors.Add (new TreatFlavor () { TreatId = t.TreatId, FlavorId = flavId });
+      }
+      _db.Entry (t).State = EntityState.Modified;
+      _db.SaveChanges ();
+      return RedirectToAction ("Detail", "Treat", new { id = t.TreatId });
+    }
 
     public IActionResult Privacy () {
       return View ();
