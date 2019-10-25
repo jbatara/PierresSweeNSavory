@@ -12,6 +12,7 @@ using SweetNSavory.Data;
 using SweetNSavory.Models;
 
 namespace SweetNSavory.Controllers {
+  [Authorize]
   public class TreatController : Controller {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _db;
@@ -23,8 +24,11 @@ namespace SweetNSavory.Controllers {
       _userManager = userManager;
     }
 
-    public IActionResult Index () {
-      return View ();
+    public async Task<ActionResult> Index () {
+      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync (userId);
+      var userTreats = _db.Treats.Where (entry => entry.User.Id == currentUser.Id);
+      return View(userTreats);
     }
 
     public IActionResult Privacy () {

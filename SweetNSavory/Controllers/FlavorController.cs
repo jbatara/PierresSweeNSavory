@@ -12,7 +12,8 @@ using SweetNSavory.Data;
 using SweetNSavory.Models;
 
 namespace SweetNSavory.Controllers {
-  public class FlavorController : Controller {
+    [Authorize]
+    public class FlavorController : Controller {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
