@@ -18,16 +18,23 @@
     </tr>
   </thead>
   <tbody>
-  @foreach(Treat t in Model)
+  @foreach(TreatViewModel t in Model)
   {
-    <tr class="clickable" onclick="window.location='@($"/treat/{t.TreatId}")'">
-      <th scope="row">@($"{t.TreatId}")</th>
-      <td>@($"{t.TreatName}")</td>
+    <tr class="clickable" onclick="window.location='@($"/treat/{t.Treat.TreatId}")'">
+      <th scope="row">@($"{t.Treat.TreatId}")</th>
+      <td>@($"{t.Treat.TreatName}")</td>
       <td>
-          @foreach(TreatFlavor tf in t.TreatFlavors)
-          {
-              <p>@($"{tf.FlavorName}")</p><a href="/treat/deleteflavor/" name="id" value="tf."
-          }
+        @if(t.Flavors.Any())
+        {
+            @foreach(Flavor f in t.Flavors)
+            {
+                <p>@($"{f.FlavorName}")</p><a href="/treat/deleteflavor/" name="id" value=@($"{f.FlavorId}") class="btn btn-warning">Delete</a>
+            }
+        }
+        else
+        {
+            <p>None</p>
+        }   
       </td>
     </tr>
   }
@@ -35,6 +42,6 @@
 }
 else
 {
-    <p>I'm sorry, there are currently no stylists. Please add a stylist to continue.</p>
-    <a href="/stylist/new" class="btn btn-info">Add Stylist</a> 
+    <p>I'm sorry, there are currently no Treats. Please add a Treat to continue.</p>
+    <a href="/treat/new" class="btn btn-info">Add Treat</a> 
 }
