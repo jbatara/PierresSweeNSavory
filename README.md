@@ -38,7 +38,7 @@ $dotnet run
 ```
 and enjoy!
 
-In the even that the SQLite database is not available, create an app.db file in the SweetNSavory/SweetNSavory/ folder and run the command
+In the event that the SQLite database is not available, create an app.db file in the SweetNSavory/SweetNSavory/ folder and run the command
 ```
 $dotnet ef database update
 ```
@@ -48,7 +48,7 @@ This project is currently not hosted online.
 
 ## Known Bugs
 
-_None. All previously reported bugs have been resolved._
+- When registering a user, the error "No such column u.Discriminator"
 
 ## Support and contact details
 
