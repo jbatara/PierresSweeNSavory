@@ -9,30 +9,27 @@ using SweetNSavory.Data;
 namespace SweetNSavory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191025183348_InitialwithIdentity")]
-    partial class InitialwithIdentity
+    [Migration("20191111044501_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0");
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -47,18 +44,14 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("ClaimType");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("ClaimValue");
 
                     b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -70,18 +63,14 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("ClaimType");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("ClaimValue");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -93,19 +82,15 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("ProviderDisplayName");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                        .IsRequired();
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -116,11 +101,9 @@ namespace SweetNSavory.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("UserId");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -131,19 +114,15 @@ namespace SweetNSavory.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("UserId");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("Value");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -153,53 +132,39 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("SweetNSavory.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("EmailConfirmed");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("LockoutEnabled");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("PasswordHash");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("PhoneNumber");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("SecurityStamp");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -217,14 +182,11 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("SweetNSavory.Models.Flavor", b =>
                 {
                     b.Property<int>("FlavorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FlavorName")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("FlavorName");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("UserId");
 
                     b.HasKey("FlavorId");
 
@@ -236,14 +198,11 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("SweetNSavory.Models.Treat", b =>
                 {
                     b.Property<int>("TreatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("TreatName")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("TreatName");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("UserId");
 
                     b.HasKey("TreatId");
 
@@ -255,14 +214,11 @@ namespace SweetNSavory.Migrations
             modelBuilder.Entity("SweetNSavory.Models.TreatFlavor", b =>
                 {
                     b.Property<int>("TreatFlavorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("FlavorId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("FlavorId");
 
-                    b.Property<int>("TreatId")
-                        .HasColumnType("INTEGER");
+                    b.Property<int>("TreatId");
 
                     b.HasKey("TreatFlavorId");
 
@@ -275,53 +231,47 @@ namespace SweetNSavory.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SweetNSavory.Models.ApplicationUser", null)
+                    b.HasOne("SweetNSavory.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SweetNSavory.Models.ApplicationUser", null)
+                    b.HasOne("SweetNSavory.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("SweetNSavory.Models.ApplicationUser", null)
+                    b.HasOne("SweetNSavory.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SweetNSavory.Models.ApplicationUser", null)
+                    b.HasOne("SweetNSavory.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SweetNSavory.Models.Flavor", b =>
@@ -343,14 +293,12 @@ namespace SweetNSavory.Migrations
                     b.HasOne("SweetNSavory.Models.Flavor", "Flavor")
                         .WithMany("TreatFlavors")
                         .HasForeignKey("FlavorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SweetNSavory.Models.Treat", "Treat")
                         .WithMany("TreatFlavors")
                         .HasForeignKey("TreatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
