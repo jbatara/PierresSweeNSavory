@@ -1,0 +1,19 @@
+@using SweetNSavory.Models;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.Linq;
+@{
+  Layout = "_Layout";
+}
+@model Flavor;
+
+<h1>New Flavor</h1>
+
+
+    
+      @using(Html.BeginForm())
+      {
+        @Html.HiddenFor(model => model.FlavorId, new {Value = Model.FlavorId})
+        @Html.Label("Flavor","Flavor Name", new {})
+        @Html.TextBoxFor(model => model.FlavorName)<br>
+        <button type="submit" value="Add Flavor" class="btn btn-info">Add Flavor</button>
+      }

@@ -1,0 +1,32 @@
+@using SweetNSavory.Models;
+@using System.Linq;
+@{
+  Layout = "_Layout";
+}
+@model FlavorViewModel;
+
+<h1>Edit</h1>
+
+@if(Model != null)
+{
+      <h2>@(Html.Raw($"<a href='/flavor/{Model.Flavor.FlavorId}'>{Model.Flavor.FlavorName}</a>"))</h2>
+      <ul>
+        @if(Model.Treats.Any())
+        {
+            @foreach(Treat t in Model.Treats)
+            {
+                <li>@($"{t.TreatName}")</li>
+            }
+        }
+        else
+        {
+            <li>None</li>
+        }   
+      </ul>
+  }
+}
+else
+{
+    <p>@($"I'm sorry, there is no Flavors with this id. Please return to the home page.")</p>
+    <a href="/" class="btn btn-info">Home</a> 
+}
