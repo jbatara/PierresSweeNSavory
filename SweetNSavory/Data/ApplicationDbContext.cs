@@ -8,7 +8,7 @@ using SweetNSavory.Models;
 
 namespace SweetNSavory.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Treat> Treats {get;set;}
         public DbSet<Flavor> Flavors {get;set;}
