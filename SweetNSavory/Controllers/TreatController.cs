@@ -28,8 +28,33 @@ namespace SweetNSavory.Controllers {
     public async Task<ActionResult> Index () {
       var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync (userId);
-      var userTreats = _db.Treats.Where (entry => entry.User.Id == currentUser.Id);
-      return View (userTreats);
+      var userTreatIds = _db.Treats.Where (entry => entry.User.Id == currentUser.Id)
+                                    .Select(entry => entry.TreatId)
+                                    .ToList();
+      var userFlavorIds = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id)
+      .Select(entry => entry.FlavorId)
+      .ToList();
+      var userTreats = _db.Treats.Where(entry => userTreatIds.Contains(entry.TreatId)).ToList();
+      List<TreatViewModel> model = new List<TreatViewModel>();
+      foreach(Treat t in userTreats)
+      {
+          Treat treatModel = t;
+          List<Flavor> flavorModel = new List<Flavor>();
+
+          foreach(TreatFlavor tf in t.TreatFlavors)
+          {
+            Flavor flavor = _db.Flavors.FirstOrDefault(entry => entry.FlavorId == tf.FlavorId);
+            if(userFlavorIds.Contains(tf.FlavorId))
+            {
+              flavorModel.Add(flavor);
+            }
+          }
+
+          TreatViewModel newTreat = new TreatViewModel(){Treat = treatModel, Flavors = flavorModel};
+          model.Add(newTreat);
+      }
+      
+      return View (model);
     }
 
     [HttpGet]
