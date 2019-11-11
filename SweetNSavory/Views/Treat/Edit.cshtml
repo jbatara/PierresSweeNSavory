@@ -1,0 +1,44 @@
+@using SweetNSavory.Models;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using System.Linq;
+@{
+  Layout = "_Layout";
+}
+@model TreatViewModel;
+
+<h1>Edit</h1>
+
+@if(Model != null)
+{
+      <h2>@(Html.Raw($"<a href='/treat/{Model.Treat.TreatId}'>Original {Model.Treat.TreatName}</a>"))</h2> <a href="/treat/deleteflavor/" name="id" value=@($"{Model.Treat.TreatId}") class="btn btn-warning">Delete</a>
+      <ul>
+        @if(Model.Flavors.Any())
+        {
+            @foreach(Flavor f in Model.Flavors)
+            {
+                <li>@($"{f.FlavorName}")</li><a href="/treat/deleteflavor/" name="id" value=@($"{f.FlavorId}") class="btn btn-warning">Delete</a>
+            }
+            @using (Html.BeginForm())
+            {
+              <li>
+                @Html.Hidden("treatId", Mode.Treat.TreatId, new {})
+                @Html.Label("Flavor","Additional Flavor", new {})
+                @Html.DropDownList("flavId", ViewBag.FlavorsDropDown, "Select Flavor", new{})
+                <button type="submit" value="Add Flavor" class="btn btn-info">Add Flavor</button>
+              </li>
+            }
+        }
+        else
+        {
+            <li>None</li>
+        }   
+      </ul>
+
+
+}
+
+else
+{
+    <p>@($"I'm sorry, there is no Treat with that id. Please return to the home page.")</p>
+    <a href="/" class="btn btn-info">Home</a> 
+}

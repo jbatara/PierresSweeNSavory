@@ -12,23 +12,27 @@ using Microsoft.Extensions.Logging;
 using SweetNSavory.Data;
 using SweetNSavory.Models;
 
-namespace SweetNSavory.Controllers {
+namespace SweetNSavory.Controllers
+{
   [Authorize]
-  public class TreatController : Controller {
+  public class TreatController : Controller
+  {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public TreatController (ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext db) {
+    public TreatController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+    {
       _logger = logger;
       _db = db;
       _userManager = userManager;
     }
 
-    public async Task<ActionResult> Index () {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
-      var userTreatIds = _db.Treats.Where (entry => entry.User.Id == currentUser.Id)
+    public async Task<ActionResult> Index()
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var userTreatIds = _db.Treats.Where(entry => entry.User.Id == currentUser.Id)
                                     .Select(entry => entry.TreatId)
                                     .ToList();
       var userFlavorIds = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id)
@@ -36,49 +40,52 @@ namespace SweetNSavory.Controllers {
       .ToList();
       var userTreats = _db.Treats.Where(entry => userTreatIds.Contains(entry.TreatId)).ToList();
       List<TreatViewModel> model = new List<TreatViewModel>();
-      foreach(Treat t in userTreats)
+      foreach (Treat t in userTreats)
       {
-          Treat treatModel = t;
-          List<Flavor> flavorModel = new List<Flavor>();
+        Treat treatModel = t;
+        List<Flavor> flavorModel = new List<Flavor>();
 
-          foreach(TreatFlavor tf in t.TreatFlavors)
+        foreach (TreatFlavor tf in t.TreatFlavors)
+        {
+          Flavor flavor = _db.Flavors.FirstOrDefault(entry => entry.FlavorId == tf.FlavorId);
+          if (userFlavorIds.Contains(tf.FlavorId))
           {
-            Flavor flavor = _db.Flavors.FirstOrDefault(entry => entry.FlavorId == tf.FlavorId);
-            if(userFlavorIds.Contains(tf.FlavorId))
-            {
-              flavorModel.Add(flavor);
-            }
+            flavorModel.Add(flavor);
           }
+        }
 
-          TreatViewModel newTreat = new TreatViewModel(){Treat = treatModel, Flavors = flavorModel};
-          model.Add(newTreat);
+        TreatViewModel newTreat = new TreatViewModel() { Treat = treatModel, Flavors = flavorModel };
+        model.Add(newTreat);
       }
-      
-      return View (model);
+
+      return View(model);
     }
 
     [HttpGet]
-    public async Task<ActionResult> New () {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
-      return View ();
+    public async Task<ActionResult> New()
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      return View();
     }
 
     [HttpPost]
-    public async Task<ActionResult> New (Treat t) {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
+    public async Task<ActionResult> New(Treat t)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
       t.User = currentUser;
-      _db.Add (t);
-      _db.SaveChanges ();
-      return RedirectToAction ("Index", "Treat");
+      _db.Add(t);
+      _db.SaveChanges();
+      return RedirectToAction("Index", "Treat");
     }
 
     [HttpGet]
-    public async Task<ActionResult> Details (int id) {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
-      var treat = _db.Treats.FirstOrDefault (t => t.TreatId == id);
+    public async Task<ActionResult> Details(int id)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var treat = _db.Treats.FirstOrDefault(t => t.TreatId == id);
       List<int> flavorIds = _db.TreatFlavors
                       .Where(tf => tf.TreatId == treat.TreatId)
                       .Select(rf => rf.FlavorId)
@@ -86,39 +93,71 @@ namespace SweetNSavory.Controllers {
       var flavors = _db.Flavors
                     .Where(f => flavorIds.Contains(f.FlavorId))
                     .ToList();
-      var model = new TreatViewModel(){Treat = treat,Flavors = flavors};
-      return View (model);
+      var model = new TreatViewModel() { Treat = treat, Flavors = flavors };
+      return View(model);
     }
 
     [HttpGet]
-    public async Task<ActionResult> Edit (int id) {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
-      var model = _db.Treats.FirstOrDefault (t => (t.TreatId == id) & (t.User.Id == currentUser.Id));
-      ViewBag.Flavors = _db.Flavors.ToList ();
-      ViewBag.TreatId = id;
-      return View (model);
+    public async Task<ActionResult> Edit(int id)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var allFlavors = _db.Flavors.Where(f => f.User.Id == userId).ToList();
+      var treatModel = _db.Treats.FirstOrDefault(t => (t.TreatId == id) & (t.User.Id == currentUser.Id));
+      var flavorsIds = _db.TreatFlavors.Where(tf => tf.TreatId == id)
+                                       .Select(tf => tf.FlavorId).ToList();
+      List<Flavor> flavorModels = _db.Flavors.Where(tf => flavorsIds.Contains(tf.FlavorId)).ToList();
+
+      ViewBag.FlavorsDropDown = Flavor.ListToDropDownItems(allFlavors);
+      TreatViewModel model = new TreatViewModel(){Treat = treatModel, Flavors= flavorModels};
+      return View(model);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Edit (Treat t, int flavId) {
-      var userId = this.User.FindFirst (ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync (userId);
-      if (flavId != 0) {
-        _db.TreatFlavors.Add (new TreatFlavor () { TreatId = t.TreatId, FlavorId = flavId });
+    public async Task<ActionResult> Edit(int treatId, int flavId)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      if (flavId != 0)
+      {
+        _db.TreatFlavors.Add(new TreatFlavor() { TreatId = treatId, FlavorId = flavId });
       }
-      _db.Entry (t).State = EntityState.Modified;
-      _db.SaveChanges ();
-      return RedirectToAction ("Detail", "Treat", new { id = t.TreatId });
+      _db.SaveChanges();
+      return RedirectToAction("Detail", "Treat", new { id = treatId });
     }
 
-    public IActionResult Privacy () {
-      return View ();
+    [HttpPost]
+    public async Task<ActionResult> Delete(int id)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      if (id != 0)
+      {
+        Treat treat = _db.Treats.FirstOrDefault(entry => entry.TreatId == id);
+        if (treat.User.Id == userId)
+        {
+          _db.Treats.Remove(treat);
+
+          List<TreatFlavor> treatFlavors = _db.TreatFlavors.Where(entry => entry.TreatId == id).ToList();
+          foreach (TreatFlavor tf in treatFlavors)
+          {
+            _db.TreatFlavors.Remove(tf);
+          }
+          _db.SaveChanges();
+        }
+      }
+      return RedirectToAction("Index", "Treat");
     }
 
-    [ResponseCache (Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error () {
-      return View (new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    public IActionResult Privacy()
+    {
+      return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+      return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
   }
 }
