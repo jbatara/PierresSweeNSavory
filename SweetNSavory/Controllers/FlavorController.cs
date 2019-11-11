@@ -116,20 +116,15 @@ namespace SweetNSavory.Controllers
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       var model = _db.Flavors.FirstOrDefault(t => (t.FlavorId == id) & (t.User.Id == currentUser.Id));
-      ViewBag.Flavors = _db.Flavors.ToList();
-      ViewBag.FlavorId = id;
       return View(model);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Edit(Flavor f, int treatId)
+    public async Task<ActionResult> Edit(Flavor f)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      if (treatId != 0)
-      {
-        _db.TreatFlavors.Add(new TreatFlavor() { TreatId = treatId, FlavorId = treatId });
-      }
+      
       _db.Entry(f).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Detail", "Treat", new { id = f.FlavorId });
