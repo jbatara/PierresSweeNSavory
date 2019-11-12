@@ -6,7 +6,7 @@
 @model List<TreatViewModel>;
 
 <h1>Treats</h1>
-
+<a href="/treat/new" class="btn btn-info">Add Treat</a> 
 @if(Model.Any())
 {
   <table class="table table-hover">
@@ -14,7 +14,7 @@
     <tr>
       <th scope="col">ID#</th>
       <th scope="col">Treat</th>
-      <th scope="col">Categories</th>
+      <th scope="col">Flavors</th>
     </tr>
   </thead>
   <tbody>
@@ -25,10 +25,10 @@
       <td>@($"{t.Treat.TreatName}")</td>
       <td>
         @if(t.Flavors.Any())
-        {
+          {
             @foreach(Flavor f in t.Flavors)
             {
-                <p>@($"{f.FlavorName}")</p><a href="/treat/deleteflavor/" name="id" value=@($"{f.FlavorId}") class="btn btn-warning">Delete</a>
+                <p>@($"{f.FlavorName}")</p>
             }
         }
         else

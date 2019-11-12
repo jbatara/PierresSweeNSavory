@@ -5,17 +5,16 @@
 }
 @model TreatViewModel;
 
-<h1>Edit</h1>
-
 @if(Model != null)
 {
-      <h2>@(Html.Raw($"<a href='/treat/{Model.Treat.TreatId}'>{Model.Treat.TreatName}</a>"))</h2>
+      <h1>@($"{Model.Treat.TreatName}")</h1>
+      <h4><i>Associated Flavors:</i></h4>
       <ul>
         @if(Model.Flavors.Any())
         {
             @foreach(Flavor f in Model.Flavors)
             {
-                <li>@($"{f.FlavorName}")</li><a href="/treat/deleteflavor/" name="id" value=@($"{f.FlavorId}") class="btn btn-warning">Delete</a>
+                <li>@(Html.Raw($"<a href='/flavor/{f.FlavorId}'>{f.FlavorName}</a>"))</li>
             }
         }
         else
@@ -23,10 +22,10 @@
             <li>None</li>
         }   
       </ul>
-  }
+      <a href=@($"/treat/edit/{Model.Treat.TreatId}") class="btn btn-info">Edit Treat</a> 
 }
 else
 {
-    <p>@($"I'm sorry, there is no Treat with that id. Please return to the home page.")</p>
+    <p>@($"I'm sorry, there is no Treats with this id. Please return to the home page.")</p>
     <a href="/" class="btn btn-info">Home</a> 
 }

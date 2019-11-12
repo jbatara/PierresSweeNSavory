@@ -35,26 +35,19 @@ namespace SweetNSavory.Controllers
       var userTreatIds = _db.Treats.Where(entry => entry.User.Id == currentUser.Id)
                                     .Select(entry => entry.TreatId)
                                     .ToList();
-      var userFlavorIds = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id)
-      .Select(entry => entry.FlavorId)
-      .ToList();
       var userTreats = _db.Treats.Where(entry => userTreatIds.Contains(entry.TreatId)).ToList();
+      
       List<TreatViewModel> model = new List<TreatViewModel>();
       foreach (Treat t in userTreats)
       {
         Treat treatModel = t;
-        List<Flavor> flavorModel = new List<Flavor>();
+        var flavorIds = _db.TreatFlavors.Where(tf => tf.TreatId == t.TreatId)
+          .Select(tf => tf.FlavorId)
+          .ToList();
 
-        foreach (TreatFlavor tf in t.TreatFlavors)
-        {
-          Flavor flavor = _db.Flavors.FirstOrDefault(entry => entry.FlavorId == tf.FlavorId);
-          if (userFlavorIds.Contains(tf.FlavorId))
-          {
-            flavorModel.Add(flavor);
-          }
-        }
-
-        TreatViewModel newTreat = new TreatViewModel() { Treat = treatModel, Flavors = flavorModel };
+        var flavorsModel = _db.Flavors.Where(f => flavorIds.Contains(f.FlavorId) & (f.User.Id == userId)).ToList();
+       
+        TreatViewModel newTreat = new TreatViewModel() { Treat = treatModel, Flavors = flavorsModel };
         model.Add(newTreat);
       }
 
@@ -80,8 +73,8 @@ namespace SweetNSavory.Controllers
       return RedirectToAction("Index", "Treat");
     }
 
-    [HttpGet]
-    public async Task<ActionResult> Details(int id)
+    [HttpGet("/treat/{id}")]
+    public async Task<ActionResult> Detail(int id)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
@@ -91,13 +84,13 @@ namespace SweetNSavory.Controllers
                       .Select(rf => rf.FlavorId)
                       .ToList();
       var flavors = _db.Flavors
-                    .Where(f => flavorIds.Contains(f.FlavorId))
+                    .Where(f => flavorIds.Contains(f.FlavorId) & (f.User.Id == userId))
                     .ToList();
       var model = new TreatViewModel() { Treat = treat, Flavors = flavors };
       return View(model);
     }
 
-    [HttpGet]
+    [HttpGet("/treat/edit/{id}")]
     public async Task<ActionResult> Edit(int id)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -113,7 +106,7 @@ namespace SweetNSavory.Controllers
       return View(model);
     }
 
-    [HttpPost]
+    [HttpPost("treat/edit/{id}")]
     public async Task<ActionResult> Edit(int treatId, int flavId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
