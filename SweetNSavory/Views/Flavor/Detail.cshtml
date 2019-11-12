@@ -5,25 +5,20 @@
 }
 @model FlavorViewModel;
 
-<h1>Edit</h1>
-
 @if(Model != null)
 {
-      <h2>@(Html.Raw($"<a href='/flavor/{Model.Flavor.FlavorId}'>{Model.Flavor.FlavorName}</a>"))</h2>
+      <h1>@($"{Model.Flavor.FlavorName}")</h1>
+      <h4><i>Associated Treats:</i></h4>
       <ul>
         @if(Model.Treats.Any())
         {
             @foreach(Treat t in Model.Treats)
             {
-                <li>@($"{t.TreatName}")</li>
+                <li>@(Html.Raw($"<a href='/treat/{t.TreatId}'>{t.TreatName}</a>"))</li>
             }
-        }
-        else
-        {
-            <li>None</li>
-        }   
+        } 
       </ul>
-  }
+      <a href=@($"/flavor/edit/{Model.Flavor.FlavorId}") class="btn btn-info">Edit Flavor</a> 
 }
 else
 {

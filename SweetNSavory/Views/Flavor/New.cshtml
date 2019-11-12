@@ -12,7 +12,7 @@
     
       @using(Html.BeginForm())
       {
-        @Html.HiddenFor(model => model.FlavorId, new {Value = Model.FlavorId})
+        @Html.HiddenFor(model => model.FlavorId)
         @Html.Label("Flavor","Flavor Name", new {})
         @Html.TextBoxFor(model => model.FlavorName)<br>
         <button type="submit" value="Add Flavor" class="btn btn-info">Add Flavor</button>

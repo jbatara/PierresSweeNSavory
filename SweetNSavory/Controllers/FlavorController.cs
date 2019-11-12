@@ -47,21 +47,15 @@ namespace SweetNSavory.Controllers
       foreach (Flavor f in userFlavors)
       {
         Flavor flavorModel = f;
-        List<Treat> treatsModel = new List<Treat>();
-
-        foreach (TreatFlavor tf in f.TreatFlavors)
-        {
-          Treat treat = _db.Treats.FirstOrDefault(entry => entry.TreatId == tf.TreatId);
-          if (userTreatIds.Contains(tf.TreatId))
-          {
-            treatsModel.Add(treat);
-          }
-        }
+        var treatIds = _db.TreatFlavors.Where(tf => tf.FlavorId == f.FlavorId)
+          .Select(tf => tf.TreatId)
+          .ToList();
+        var treatsModel = _db.Treats.Where(t => treatIds.Contains(t.TreatId) & (t.User.Id == userId)).ToList();
 
         FlavorViewModel newFlavor = new FlavorViewModel() { Flavor = flavorModel, Treats = treatsModel };
         model.Add(newFlavor);
       }
-      return View(userFlavors);
+      return View(model);
     }
 
     [HttpGet]
@@ -80,37 +74,29 @@ namespace SweetNSavory.Controllers
       f.User = currentUser;
       _db.Add(f);
       _db.SaveChanges();
-      return RedirectToAction("Index", "Treat");
+      return RedirectToAction("Index", "Flavor");
     }
 
-    [HttpGet]
-    public async Task<ActionResult> Details(int id)
+    [HttpGet("flavor/{id}")]
+    public async Task<ActionResult> Detail(int id)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
 
       var flavorModel = _db.Flavors.FirstOrDefault(entry => entry.FlavorId == id);
 
-      var userTreatIds = _db.Treats.Where(entry => entry.User.Id == currentUser.Id)
+      List<int> userTreatIds = _db.TreatFlavors.Where(entry => entry.FlavorId == id)
                                     .Select(entry => entry.TreatId)
                                     .ToList();
 
-      List<Treat> treatsModel = new List<Treat>();
+      List<Treat> treatsModel = _db.Treats.Where(t => userTreatIds.Contains(t.TreatId) & (t.User.Id == userId)).ToList();
 
-      foreach (TreatFlavor tf in flavorModel.TreatFlavors)
-      {
-        Treat treat = _db.Treats.FirstOrDefault(entry => entry.TreatId == tf.TreatId);
-        if (userTreatIds.Contains(tf.TreatId))
-        {
-          treatsModel.Add(treat);
-        }
-      }
       FlavorViewModel model = new FlavorViewModel() { Flavor = flavorModel, Treats = treatsModel };
       
       return View(model);
     }
 
-    [HttpGet]
+    [HttpGet("flavor/edit/{id}")]
     public async Task<ActionResult> Edit(int id)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -119,11 +105,11 @@ namespace SweetNSavory.Controllers
       return View(model);
     }
 
-    [HttpPost]
+    [HttpPost("flavor/edit/{id}")]
     public async Task<ActionResult> Edit(Flavor f)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync(userId);
+      var currentUser = await _userManager.FindByIdAsync(userId); 
       
       _db.Entry(f).State = EntityState.Modified;
       _db.SaveChanges();

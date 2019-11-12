@@ -10,14 +10,14 @@
 
 @if(Model != null)
 {
-      <h2>@(Html.Raw($"<a href='/flavor/{Model.FlavorId}'> {Model.Flavor.FlavorName}</a>"))</h2> <a href="/flavor/delete/" name="id" value=@($"{Model.FlavorId}") class="btn btn-warning">Delete</a>
+      <h2>@(Html.Raw($"<a href='/flavor/{Model.FlavorId}'> {Model.FlavorName}</a>"))</h2> <a href="/flavor/delete/" name="id" value=@($"{Model.FlavorId}") class="btn btn-warning">Delete</a>
     
       @using(Html.BeginForm())
       {
         @Html.HiddenFor(model => model.FlavorId, new {Value = Model.FlavorId})
         @Html.Label("Flavor","Rename Flavor", new {})
         @Html.TextBoxFor(model => model.FlavorName)<br>
-        <button type="submit" value="Add Flavor" class="btn btn-info">Add Flavor</button>
+        <button type="submit" value="Add Flavor" class="btn btn-info">Save Flavor Edit</button>
       }
 }
 

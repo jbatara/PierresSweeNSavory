@@ -7,6 +7,7 @@
 
 <h1>Flavors</h1>
 
+<a href="/flavor/new" class="btn btn-info">Add Flavor</a> 
 @if(Model.Any())
 {
   <table class="table table-hover">
@@ -20,7 +21,7 @@
   <tbody>
   @foreach(FlavorViewModel f in Model)
   {
-    <tr class="clickable" onclick="window.location='@($"/treat/{f.Flavor.FlavorId}")'">
+    <tr class="clickable" onclick="window.location='@($"/flavor/{f.Flavor.FlavorId}")'">
       <th scope="row">@($"{f.Flavor.FlavorId}")</th>
       <td>@($"{f.Flavor.FlavorName}")</td>
       <td>
@@ -43,5 +44,5 @@
 else
 {
     <p>I'm sorry, there are currently no Flavors. Please add a Flavor to continue.</p>
-    <a href="/treat/new" class="btn btn-info">Add Flavor</a> 
+    <a href="/flavor/new" class="btn btn-info">Add Flavor</a> 
 }
